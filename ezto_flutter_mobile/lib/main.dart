@@ -12,7 +12,6 @@ import 'views/login.dart';
 
 void main() async {
   await Hive.initFlutter();
-  runApp()
   runApp(
       EztoVerifyApp(
         forceUpdate: const ForceUpdate(

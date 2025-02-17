@@ -133,7 +133,7 @@ class _MyLoginState extends State<MyLogin> {
     });
 
     var transactionConfig = jsify({
-      'api': 'https://getbit.eztovrfy.com/auth/realms/api/ezto_web_push/bcb652f0-17da-4eca-8cda-05baee1c7406/getbit/register',
+      'api': '{{your_api_url}}',
       'apiVersion': "1",
     });
     // Instantiate the SDK class

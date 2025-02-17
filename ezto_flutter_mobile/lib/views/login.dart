@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'dart:js_util';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -11,7 +10,8 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
-import '../js/ezto-interop.dart';
+import 'package:ezto_verify_flutter_web_sdk/ezto_verify_web_sdk.dart';
+
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -37,10 +37,10 @@ class _MyLoginState extends State<MyLogin> {
   }
 
   Future<String> createTransaction() async {
-    var url = Uri.https('getbit.eztovrfy.com', 'auth/realms/getbit/protocol/openid-connect/transaction');
+    var url = Uri.https('{{your_domain}}', '{{transaction_api_path}}');
 
     http.Response response = await http.post(url, headers: {
-      HttpHeaders.authorizationHeader: "Basic MzhkOTdjYTItOWMyYS00ZjdmLTllZTQtZmE4MWE2ZWQ0OTUzOkZFWDBSVlBycldCalM1UUNIclRmRmpTQmRiYkpBejlGaFNLa1Rha1RIRDhjZFZSZk9CUzBRMENzdWdjTnFIWko=",
+      HttpHeaders.authorizationHeader: "Basic {{your_api_token}}", // Make sure you don't hardcode your token in the code
       "api-version": "1",
       HttpHeaders.contentTypeHeader: "application/x-www-form-urlencoded"
     });
@@ -149,21 +149,19 @@ class _MyLoginState extends State<MyLogin> {
   }
 
   void handleWebLogin() {
-    var request = jsify({
-      'request': {
-        'user': {
-          'metadata': {},
-        },
-      },
-    });
-
-    var transactionConfig = jsify({
-      'api': 'https://getbit.eztovrfy.com/auth/realms/api/ezto_web_push/bcb652f0-17da-4eca-8cda-05baee1c7406/getbit/register',
-      'apiVersion': "1",
-    });
     // Instantiate the SDK class
-    var sdk = eztoverify();
-    sdk.request(request, transactionConfig, handleCallback);
+    EztoVerifyWebSdk().request(
+      api: "{{your_api_url}}", // Required - Provide the API endpoint, use the API Builder to generate the endpoint.
+      apiVersion: "1", // Optional - Defaults to version 1 if not provided.
+      request: {
+        "user": {} // Required - Leave this empty if you don't want pass any metadata. Check documentation for further details.
+      },
+      onComplete: (Result result) {
+        if (result.success) {
+          // Handle successful verification result
+        }
+      },
+    );
   }
 
   void login() async {
